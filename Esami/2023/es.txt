@@ -1,0 +1,24 @@
+best effort solo se richiesto
+altrimenti commentare
+(es pipe lettura 1024)
+
+domanda 2 teoria
+
+domanda 3 dijkstra o il panettiere
+con un errore
+cosa comporta per il programma
+
+rubare il k ad un altro
+si arriva in cs, ci arriva uno solo o in tanti?
+la mutua esclusiono è violata/non è violata
+no deadlock garantito/non è garantita
+
+mutua esclusione, deadlock e starvation
+algoritmo di dijkstra di per se non garantisce la starvation
+proprietà di correttezza
+
+1:45h
+
+deadlock -> starvation
+no starvation -> deadlock
+

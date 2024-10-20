@@ -1,0 +1,43 @@
+Le condizioni per il Deadlock sono:
+- Mutua Esclusione: solo un processo alla volta può accedere in critical section
+- Hold-and-Wait: un processo attende una risorsa mentre ne trattiene un’altra
+- No-Preemption: non si può togliere “a forza” una risorsa da un processo che la trattiene
+- Circular Wait: si crea una catena di processi che aspettano una risorsa e contemporaneamente ne trattengono un’altra
+(Le prime tre condizioni sono soltanto necessarie, ma non sufficienti)
+
+La gestione del deadlock può avvenire seguendo diversi approcci:
+- Prevenzione
+- Avoidance
+- Identificazione (e conseguente recupero)
+
+La Prevenzione del deadlock prevede che si vada ad agire su una delle condizioni, di seguito alcuni esempi.
+Per la mutua esclusione si può allentare il vincolo, rilassandolo, ad esempio nell’accesso ad un file permettendo la
+lettura concorrente a più processi;
+per l’hold-and-wait si potrebbe garantire ad ogni processo tutte le risorse di cui ha bisogno, negandole agli altri
+finché non ha concluso, questa è una soluzione però molto conservativa e poco efficiente;
+per il no-preemption nel caso un processo si dovesse vedere rifiutata una richiesta di allocazione, potrebbe rilasciare
+le risorse che trattiene e riprocedere nelle richieste, oppure permettere l’intervento del SO se i processi hanno il
+concetto di priorità;
+per la circular-wait si potrebbe decidere un ordine lineare di accesso alle risorse, in modo da rompere la catene.
+
+L’Avoidance del Deadlock prevede l’uso di politiche dinamiche in seguito a richieste di allocazione, basate sulla
+natura dello stato attuale; infatti, uno stato si può definire “safe” se esiste una sequenza di allocazioni che non
+portano al Deadlock, invece si definisce “non sicuro” se non esiste una sequenza di allocazioni che permette ad 
+almeno un processo di terminare.
+L’avoidance è più flessibile della prevenzione, eppure richiede di conoscere in anticipo quali e quante risorse 
+servono ad ogni processo, inoltre la presenza di un solo array variabile nel tempo preclude l’utilizza di questo approccio.
+
+La Detection del Deadlock infine utilizza algoritmi molto semplici e check più o meno frequenti a seconda della
+probabilità con cui si può verificare un deadlock.
+Un modo per effettuare l’identificazione è ad esempio marcare tutti i processi senza risorse e tutti quelli che 
+possono terminare e rilasciare le proprie risorse, se tutti i processi saranno marcati allora la situazione attuale 
+non è deadlock.
+Una volta identificato il deadlock, partono le policy di recupero, ad esempio facendo l’abort di tutti i processi;
+oppure ripartendo da un punto precedente considerato “sicuro” (questo però richiederebbe l’uso di checkpoint); 
+oppure rilasciando un poco alla volta risorse, o effettuando l’abort di un processo alla volta finché non si è più in
+Deadlock.
+A differenza della prevenzione, questo approccio garantisce le risorse ai processi ogni qualvolta è possibile; 
+infatti, è molto meno conservativo, però i continui check potrebbero aumentare il consumo di tempo CPU.
+
+In generale non esiste una soluzione efficiente per gestire il Deadlock, ogni soluzione infatti va considerata con 
+i suoi pro e i suoi contro.

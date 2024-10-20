@@ -1,0 +1,30 @@
+L’algoritmo del panettiere permette di trattare la critical section come “una zona affollata”, cioè dando ai vari
+processi un numero che determinerà l’ordine di entrata nella CS (fase doorway) e “servendo” i processi nell’ordine
+giusto (fase bakery). 
+In questo caso, la modifica non compromette le due fasi in modo diretto, ma eliminando l’istruzione num[i] = 0, si
+modifica l’algoritmo profondamente; infatti, ogni processo che esce dalla CS resetta il suo numeretto, per indicare 
+a tutti gli altri che non è più in fila. In questo modo invece ogni processo che esce dalla CS non comunica di aver
+finito e continuerà a restare in fila con la sua precedente priorità. Quindi l’attesa degli altri processi sulla 
+riga 7 diventerà sempre più grande man mano che aumenteranno il numero di processi che sono già entrati in CS.
+
+La fila potrà riprendere a “scorrere” quando i processi vogliono di nuovo entrare in CS e di conseguenza modificano 
+il proprio numero, cambiando il loro ordine di fila; infatti non sarà più valida la condizione
+ {num[j], j } < {num[i],i} e il processo in attesa si sblocca, uscendo da busywaiting in cui si trovava
+precedentemente.
+Nel caso i processi entrati non esprimono la volontà di rientrare, cambiando il proprio numeretto, si viene a creare
+una situazione di stallo, ma solo momentanea, poiché può essere sbloccata come specificato in precedenza. Quindi il 
+No-Deadlock è comunque garantito come nella versione originale, ma la proprietà di No-Starvation invece non più, 
+poiché un processo potrebbe vedersi negato l’accesso in CS e quindi dover attendere molto prima di poter usare le
+risorse condivise. L’algoritmo modificato, a differenza della versione originale non garantisce perciò un accesso 
+equo in CS.
+Invece la proprietà di Mutua Esclusione continua ad essere garantita poiché non è possibile che un processo possa
+entrare in CS mentre essa è occupata da un altro processo.
+
+es.  p1, …, p10 vogliono entrare in CS, hanno scelto il proprio numeretto (riga 3), 
+supponiamo: num[1] = 1, … num[10] = 10, attraversano la fase di bakery ed attendono il proprio turno per poter
+entrare in CS  (riga 5, 6, 7); dopo essere usciti dalla cs non resettano il proprio numeretto.
+
+Successivamente p10 vuole rientrare in CS, questa volta si fermerà sulla riga 7 in attesa che gli altri processi
+pongano num[j] = 0, compie busywaiting finché non si verifica la condizione per lui necessaria per uscire dal ciclo.
+Nel frattempo se p1 volesse rientrare in CS DOPO p10, salterebbe la fila, ecco perché l’algoritmo non risulta più 
+equo come nella versione originale.

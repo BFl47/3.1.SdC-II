@@ -1,0 +1,60 @@
+La variabile k indica quale processo può accedere in sezione critica; infatti, nel ciclo 4 – 6 i 
+processi che vogliono entrare in CS “litigano” per il k, cambiando il valore della variabile se il 
+processo che era precedentemente in CS è uscito ed ha espresso il suo “non interesse” per la CS.
+
+Si può entrare in CS nei seguenti casi: k= i oppure k != i ma interested[k] = true; perciò 
+nell’algoritmo modificato, si riesce a settare il valore di k solo se un processo ha espresso 
+interesse ed ancora non ha settato interested[k] = false, oppure se lo stesso processo 
+(il “proprietario” di k) esprime nuovamente interesse per entrare in CS. Nel caso in cui il processo
+ non dovesse più esprimere interesse, avendo esso preso il monopolio di k, nessun altro processo 
+ potrebbe entrare in CS.
+
+L’algoritmo garantisce ME; infatti il secondo ciclo agisce come nell’algoritmo originale, controllando 
+che un solo processo sia passato dal ciclo 1.
+L’algoritmo di Dijkstra per sua natura non garantisce No starvation e questo vale anche con la modifica
+ introdotta. È però una soluzione Deadlock free, anche con la modifica introdotta, poiché il secondo 
+ ciclo risolve i problemi del primo.
+
+Soluzione
+ME:
+Per accedere alla sezione critica è necessario che: 
+1) o k=i o che k!=i e il processo k sia interessato
+2) solo i ha passato quando fa il controllo del ciclo for
+
+Se a causa dell'errore più processi passano il ciclo for, vengono re-inviati al ciclo while di riga 3.
+Nonostante l'errore, l’algoritmo prova a risolvere, come nell'algoritmo originale.
+
+ME: 
+Possono esistere sequenze di scheduling tali che un processo acceda alla CS. In tal caso altri
+processi che settano k dopo non possono accedere perchè c'è almeno un altro passed (quello in
+CS)
+
+Esempio di accesso:
+interested[1]=interested[2]=true
+k=1
+entrambi p1 e p2 sono a 3
+1: esce dal ciclo
+2: entra nel while
+2: setta passed = false
+1: passed[1] = true
+1: esegue 8-9 su 2 (altri eventuali processi non interessati ovviamente non sono passati)
+1: esce dal ciclo for ed è pronto per la CS
+2: essendo interested[1]==true
+2: k=2
+2: passed[2] = true
+2: essendo passed[1]== true, va a 3
+...
+1: esce da CS
+2: nel frattempo cicla da 3 a 9
+1: mette passed[1]=false, interested[i]= false
+2: riesce a entrare in CS
+
+La ME è quindi garantita perché il secondo ciclo risolve l’errore del primo
+
+ND:
+Finchè un processo solo è interessato (se k!=i) non potrà accedere alla CS. Quando però il processo k setterà
+interested[i]= True, entrambi possono settare passed a true. Stesso ragionamento della ME, tra tante volte che 
+tornano indietro può capitare che lo scheduler esegua una sequenza che permette a uno di accedere 
+(Ricordatevi che un processo dopo aver eseguito la CS torna alla NCS e prima o poi uscirà da essa). Il No Deadlock è
+quindi garantito. La starvation invece sarà presente perché sotto determinate condizioni la sezione critica è
+disponibile ma i processi non riescono a procedere.

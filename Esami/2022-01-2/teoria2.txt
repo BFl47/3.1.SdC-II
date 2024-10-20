@@ -1,0 +1,16 @@
+L’algoritmo del panettiere è stato modificato nella fase di “bakery”, cioè quando i processi (dopo aver scelto il
+“ticket” nella fase di “doorway”) vengono serviti seguendo l’ordine dei loro numeri.
+Nella versione originale i processi compiono busywaiting nel caso in cui ci sia un altro processo che sta scegliendo 
+il numero (riga 6) e successivamente se dovesse esserci un altro processo che sta in fila (num[j] != 0) AND se questo
+processo è in fila prima di lui (riga 7).
+Modificando l’operatore logico AND con l’operatore logico OR in riga 7 si cambia totalmente la condizione per il
+busywaiting; infatti, i processi aspetteranno anche se c’è qualche processo in fila con un numero più grande del loro,
+quindi se sono in fila dopo di loro.
+Non solo si manomette totalmente la fase di bakery che dovrebbe permettere un accesso nella critical section equo tra 
+i processi, cioè quella parte dell’algoritmo che assicura la condizione No-Starvation, ma in questo modo si andrebbe
+incontro ad una situazione di Deadlock nel caso in cui dovessero esserci due o più processi in fila (sulla riga 7) 
+per entrare nella sezione critica, poiché ognuno di essi aspetterebbe che gli altri vengano “serviti”.
+La Mutua Esclusione invece viene garantita anche con la modifica; infatti, non vi possono essere più processi che
+contemporanemente accedono alla critical section.
+Quindi in conclusione l’algoritmo assicura la Mutua Esclusione, ma a differenza della versione originale non assicura
+più No-Deadlock e conseguentemente non assicura più No-Starvation.

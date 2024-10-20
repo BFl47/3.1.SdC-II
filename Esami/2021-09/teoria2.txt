@@ -1,0 +1,42 @@
+L’algoritmo del panettiere prevede due fasi principali: la fase doorway e la fase bakery che permettono di gestire 
+la critical section come se fosse una zona “affollata”, da regolare con numeretti e una fila di attesa per essere
+“serviti”. Il ticket è rappresentato dal valore num[i], che viene scelto nella fase doorway e determinerà quindi
+l’ordine di ingresso nella CS.
+Nella versione originale ogni processo che esce dalla critical section resetta il proprio ticket a 0 per indicare 
+agli altri processi che non è più in fila ed inoltre non è più in CS.
+Quindi la modifica va a manomettere l’ingresso alla critical section, che in tal modo non garantirà più la Mutua
+Esclusione. 
+Ciò si può verificare con un esempio triviale, utilizzando solo due processi:
+
+
+
+p1 (inizialmente num[1] = 0)
+2. indica che sta scegliendo
+3. num[1] = 1 + 0 = 1
+4. indica che non sta più scegliendo
+5. controlla gli altri processi, 
+6. compie eventualmente busywaiting se un altro processo sta scegliendo il numero
+7. compie busywaiting se un altro processo ha un num != 0 ed è in fila prima di lui
+9. resetta il proprio numero, num[1] = 0
+
+// viene interrotto dallo scheduler → l’esecuzione passa a p2
+
+p2 (num[2] = 0)
+2. indica che sta scegliendo
+3. num[2] = 1 + 0 = 1, poiché stiamo supponendo che p2 si trovi sulla riga 3 dopo che p1 ha settato num [1] = 0
+4. indica che non sta più scegliendo
+5 – 6 – 7 verifica se qualche altro processo sta scegliendo e se ha un numero diverso da 0, in questo caso non compie busywaiting
+9. resetta il proprio numero, num[2] = 0
+10. p2 entra in critical section
+
+// viene interrotto dallo scheduler → l’esecuzione ripassa a p1
+
+10. anche p1 entra in critical section.
+
+Quindi introducendo la modifica non si garantisce più la Mutua Esclusione, cioè non viene più garantita l’integrità 
+dei dati, poiché più processi possono modificare le risorse contemporanemente, senza un meccanismo di sincronizzazione.
+La fase bakery però non è stata manomessa ed è proprio la parte che garantisce un’entrata equa in critical section e
+che nella versione originale garantiva No Starvation; anche in questo caso continua a garantire No starvation, poiché 
+i processi continueranno a seguire l’ordine deciso in fase doorway per entrare in CS. Inoltre No Starvation implica 
+No Deadlock, quindi anche questa versione è una soluzione Deadlock-free, come la versione orginale.
+

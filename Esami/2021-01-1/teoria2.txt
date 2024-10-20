@@ -1,0 +1,18 @@
+L’algoritmo del panettiere è diviso in due parti principali: parte doorway, dove il processo sceglie il numero 
+che rappresenterà l’ordine in cui potrà entrare in CS e la parte bakery, dove il processo viene “servito” seguendo
+l’ordine giusto; infatti l’algoritmo adotta le politiche da “posto affollato” per gestire la CS.
+La modifica è stata effettuata nella fase bakery, dove un processo attende se un altro processo sta effettuando la
+scelta del numero (riga 6) e/o se un altro processo è in fila ED ha un numero più piccolo, cioè è in fila prima di 
+lui (riga 7). Nello specifico è stata modificata proprio questa condizione, quindi il processo effettuerà busywaiting
+nel caso in cui un altro processo ha scelto un numero, quindi si è messo in file OPPURE se è in fila da prima di lui.
+Quindi i suoi tempi di attesa aumenteranno anche se un processo è fila ma con un numero più grande del suo, cioè se 
+è in fila dopo di lui.
+La versione orginale dell’algoritmo del panettiere garantisce No Starvation e conseguentemente No Deadlock, in questo
+caso, invece un processo potrebbe vedersi negato l’accesso e trovarsi in una situazione di Starvation. Poiché la 
+No Starvation non è garantita, non si può dare per scontato che la soluzione sia Deadlock-free. Anzi, nel caso in 
+cui tutti i processi volessero entrare in CS, scegliendo quindi un numero e venendo interrotti dallo scheduler prima 
+di riuscire ad entrare in CS, tutti compirebbero busywaiting attendendo che gli altri j-esimi processi settino 
+num[j] = 0.
+La modifica non manomette il procedimento di entrata, infatti un solo processo alla volta si può trovare in sezione
+critica, quindi come la versione originale, viene garantita la Mutua Esclusione. Un processo può infatti entrare in 
+CS se nessun altro è in fila mentre si trova sulla riga 7.

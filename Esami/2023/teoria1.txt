@@ -1,0 +1,54 @@
+Le operazioni "compare-and-swap" ed "exchange" sono dei meccanismi per implementare via hardware 
+il meccanismo di entrata/uscita nella sezione critica. Entrambe prevedono l'uso di una variabile
+che permette l'ingresso in critica section.
+
+-----
+compare-and-swap
+
+while(true) {
+  ...
+
+  while(compare_to_swap(&bolt, 0, 1) == 1);
+	// legge bolt, se è uguale a 0 scrive 1, se è uguale a 1 non effettua operazioni
+	// effettua busywaiting finchè bolt = 1
+
+  // sezione critica
+  bolt = 0
+
+  ...
+}
+
+La variabile bolt è inizializzata a 0 e quando il suo valore è pari ad 1 permette l'accesso in cs;
+infatti, non appena il processo esce dalla sezione critica, il suo valore viene riportato a 0, per
+segnalare che la cs è libera. 
+
+-----
+exchange
+
+while (true) {
+  ...
+
+  int key_i = 1;                      // identificativo del processo
+  do exchange (&key_i, &bolt)
+  while (key_i != 0);
+	// quando key_i != 0 vuol dire che bolt = 1
+	// quindi si è ancora in critical section
+  
+  // critical section
+  bolt = 0;
+  
+  ...
+}
+
+Anche per l'operazione exchange la variabile bolt permette di capire se la critical section è libera.
+
+Pro:
+- Entrambe le operazioni sono applicabili a un qualsiasi numero di processi
+- Sono inoltre utilizzabili per più critical section, utilizzando per ogni sezione la propria 
+variabile indicatrica
+
+Contro:
+- Entrambi i meccanismi causano busywaiting, poiché i processi attendono in modo attivo
+- Non garantiscono no starvation e non sono soluzione deadlock free
+- Non sono disponibili su tutte le architetture
+

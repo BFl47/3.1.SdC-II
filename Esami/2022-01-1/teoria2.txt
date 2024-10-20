@@ -1,0 +1,14 @@
+L’algoritmo del panettiere è diviso in due parti: parte doorway e parte bakery, la modifica in questo caso è stata
+effettuata nella parte doorway, cioè quella dedicata alla scelta del “ticket”.
+Inizialmente il max è pari a 0 e non incrementando mai gli altri numeri, esso resterà pari a 0 per l’intera esecuzione.
+Quindi la fase doorway è compromessa; infatti, num[i] = 0 per ogni processo i-esimo.
+
+Ciò comprometterà anche la fase bakery, poiché nell’algoritmo del panettiere originale, si dovrebbero “servire” i
+processi in ordine di ticket, per garantire un accesso equo alla CS. Ogni processo che esce dalla CS setta nuovamente
+il suo numero pari a 0 per segnalare agli altri processi che non è in fila per entrare nella CS. Con questa modifica
+quindi ogni processo avrà l’impressione di essere l’unico interessato ad entrare nella critical section.
+
+Quindi la mutua esclusione non è garantita. Nello specifico nessun processo aspetterà nel ciclo while della riga 7,
+poiché la condizione num[j] != 0 sarà sempre falsa. Perciò più processi potranno entrare in CS.
+
+L’algoritmo modificato, come quello originale, garantisce No Starvation, ciò implica che è una soluzione deadlock free. 

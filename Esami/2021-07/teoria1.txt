@@ -1,0 +1,17 @@
+L’Inter-Process Communication sono i meccanismi necessari affinché due o più processi possano sincronizzarsi e
+comunicare tra loro. Infatti, dati due processi, essi possono essere tra loro indipendenti, se l’esecuzione di uno 
+non influisce sull’altro e viceversa; oppure possono essere cooperativi, se ad esempio usano risorse comuni.
+I modelli di IPC sono i seguenti:
+- Shared memory model
+- Message passing model
+
+Il modello shared memory prevede una memoria condivisa tra i processi e il sistema operativo interverrà solo per 
+la creazione della shared memory; infatti, le operazioni di lettura e scrittura non richiederanno il suo intervento. 
+Ad esempio può essere implementato tramite la shared memory posix, la cui apertura avviene tramite la funzione 
+shm_open e permette di effettuare lettura e scrittura con normali operazioni di r/w con l’utilizzo di descrittori.
+Nonostante la soluzione sia molto efficiente, non vi è alcuna sincronizzazione tra i processi, a differenza del 
+modello message passing, dove il kernel si occupa di creare e gestire le code di messaggi e garantire tra i processi
+totale sincronizzazione. Però il continuo intervento del sistema operativo determinerà overhead aggiuntivo.
+Si utilizzeranno le primitive “send e receive”, che struttano un canale tra due moduli del sistema operativo, 
+uno per il processo mittente ed uno per il processo destinatario. Le pipe e le fifo sono due esempi di canali di
+comunicazione per implementare il message passing, entrambe permettono di operare tramite descrittori.

@@ -1,0 +1,45 @@
+Le datagram socket sono uno dei vari tipi di Socket, permettono un trasferimento di dati non orientato alla 
+connessione a differenza delle stream socket; infatti, le due tipologie rispettivamente utilizzano il protocollo UDP
+(User Data Protocol) e TCP (Trasmission Control Protocol), i due protocolli principali dello strato di trasporto. 
+
+Es. Applicazione client-server
+server:
+sock_desc = socket(famiglia, SOCK_DGRAM, protocollo)
+bind(..);
+
+while (true) {
+   recvfrom(..)
+   sendto(..)
+}
+
+Il server crea la socket e successivamente effettua l’operazione di abbinamento tramite la bind, in cui verrà
+specificata una struttura di tipo sockaddr che contiene l’indirizzo IP e il numero di porta da abbinare alla socket;
+successivamente entra in un ciclo che permette di ricevere messaggi da client, memorizzando le loro informazioni su
+un’altra struttura sockaddr ed eventualmente rispondere tramite sendto.
+Poiché la socket è di tipo datagram, non bisogna effettuare le operazioni di listen e accept, poiché non si dovrà
+creare una connessione specifica per ogni client.
+
+
+client:
+sock_desc = socket(famiglia, SOCK_DGRAM, protocollo)
+
+while (true) {
+   sendto(..)
+   recvfrom(..)
+}
+
+close(sock_desc)
+
+Anche il client apre la socket tramite la funzione socket, poi è immediatamente pronta ad inviare messaggi tramite
+sendto e a ricevere messaggi con recvfrom (in modo speculare al server). Non si effettua la bind, poiché è
+un’operazione dedicata al server ed in questo caso specifico, essendo la socket di tipo Datagram non si effettua 
+la connect, poiché come già specificato non dovrà avvenire l’handshake tra client e server. Inoltre quando il client
+utilizzarà close, esso non verrà catturato dal server, poiché non vi è alcuna connessione da chiudere.
+
+
+Le datagram socket utilizzano il protocollo UDP, un protocollo molto leggero (a differenza di TCP), best-effort e 
+no-frills. Non è orientato alla connessione, infatti può essere utilizzato da applicazioni o da altri protocolli che
+vogliono solo inviare un messaggio/una richiesta; ad esempio, come il protocollo DNS, che ha il compito di abbinare 
+il nome dei siti all’opportuno indirizzo IP. Inoltre non garantisce una consegna affidabile, cioè senza perdita di
+segmenti, con consegna in ordine e senza duplicazioni. UDP viene utilizzato anche nel live streaming, poiché non
+essendo pesante e complesso come TCP garantirebbe l’arrivo dei dati, ma probabilmente con una qualità più bassa.

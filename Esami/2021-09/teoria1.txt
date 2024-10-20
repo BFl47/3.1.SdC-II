@@ -1,0 +1,8 @@
+Il controllo degli accessi determina il tipo di accesso permesso all’utente corrente.
+Può essere eseguito in tre modalità:
+- Discretionary Access Control (DAC), dove i permessi vengono determinati in base all’identità del singolo utente;
+- Mandatory Access Control (MAC), i permessi vengono invece determinate sulla base di un’etichetta che viene
+confrontata con le security clearances;
+- Role Based Access Control (RBAC), che permette di assegnare le risorse a ruoli specifici, cioè i permessi vengono
+dati a classi di utenti; ogni utente inoltre potrebbe avere più ruoli e quindi più risorse a cui può accedere, ciò
+viene rappresentato tramite una matrice dei ruoli, che risulterà essere molto sparsa.

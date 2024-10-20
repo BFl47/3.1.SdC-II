@@ -1,0 +1,14 @@
+I protocolli TCP (Trasmission Control Protocol) e UDP (User Datagram Protocol) sono i due protocolli principali 
+dello strato di trasporto dello stack protocollare di Internet.
+
+Il protocollo TCP è orientato alla connessione, infatti crea una connessione logica tra due endpoint. Garantisce 
+un servizio di trasporto affidabile, cioè senza perdita di pacchetti, con consegna in ordine e senza errori sui bit. Inoltre compie controllo di congestione (è in grado di cambiare dinamicamente il quantitativo di traffico immesso 
+nella rete per adattarsi al livello di congestione) e controllo di flusso (l’end point più veloce si adatta a 
+quello più lento). E’ un protocollo molto complesso, adatto per comunicazioni bidirezionali.
+Le socket che utilizzano il protocollo TCP vengono chiamate Stream Socket e sono identificate dai due end-point 
+(IP dest, port dest, IP source, port source)
+
+Invece il protocollo UDP non è orientato alla connessione, offre un servizio best-effort e non garantisce i servizi
+offerti dal protocollo TCP; infatti, viene usato quando è necessario inviare un solo messaggio oppure nello streaming
+live. Un protocollo che si appoggia su UDP è DNS, il protocollo usato per abbinare il nome di siti web con il giusto
+indirizzo IP. Le socket che si appoggiano sul protocollo UDP sono invece chiamate Dgram Socket.

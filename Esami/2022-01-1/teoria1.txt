@@ -1,0 +1,41 @@
+Una socket di tipo Datagram utilizza il protocollo UDP (User Data Protocol), uno dei principali protocolli del 
+livello di trasporto.  È identificata dalla coppia IP address dest, port number dest, a differenza delle socket 
+stream che invece sono identificate dalla quadrupla: IP address dest e source, port number dest e source.
+
+
+Server:
+sock_desc = socket(...);
+bind(...);
+
+while (true) {
+    recvfrom(…);
+    sendto(…);
+}
+
+Il server apre una socket ed effettua l’abbinamento tra il descrittore della socket e la struttura sockaddr che
+contiene l’indirizzo del server e il numero di porta su cui accetta le connessioni.
+Entra poi in un ciclo in cui riceve un messaggio inviato da una sorgente che memorizza in un’altra struttura sockaddr
+e risponde.
+
+Client:
+sock_desc = socket(…);
+
+while (true) {
+    sendto(…);
+    recvfrom(…);
+}
+
+Il client apre una socket, in cui specifica l’indirizzo e la porta del server ed entra in un ciclo in cui trasmette
+messaggi al server e riceve le sue risposte.
+Non effettua bind, essendo un’operazione affidata soltanto al server.
+
+Quando si utilizza una datagram socket, non sono necessarie le operazioni di listen, accept (da parte del server) e
+connect (da parte del client); poiché non viene istaurata una connessione tra i due processi, a differenza delle 
+stream socket che utilizzano il protocollo TCP.
+
+Il protocollo UDP è un protocollo best effort, non garantisce infatti un controllo di flusso o di congestione o un
+servizio di consegna affidabile, cioè non garantisce: no perdite, no consegna in ordine, no errori sui bit.  
+Inoltre è un protocollo non orientato alla connessione, a differenza di TDP, come specificato in precedenza.
+Essendo un protocollo molto leggero, viene preferito nel caso in cui è necessario solo un invio e non è richiesta 
+una connessione logica tra trasmittente e ricevente, ad esempio viene utilizzato dal protocollo DNS che permette di
+associare i nomi degli host (www.sito.it) ad indirizzi IP (192.153.45.0).

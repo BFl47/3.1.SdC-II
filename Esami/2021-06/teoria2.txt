@@ -1,0 +1,40 @@
+L’algoritmo del panettiere è suddiviso in due fasi principali: fase doorway e fase bakery, le quali non sono state
+modificate; infatti, la modifica avviene dopo l’uscita dalla critical section. 
+Nella versione originale, la riga 10 serve affinché i processi possano indicare che sono usciti dalla CS e non sono 
+più in fila. Con la modifica num[i] = 1 ogni processo che non è più interessato ad entrare nella sezione critica
+apparirà costantemente in fila con il  numero pari ad 1, quindi con priorità altissima. 
+Dopo che un processo entra in CS e modifica il suo numero nel valore 1, blocca gli altri che ancora non hanno scelto 
+il numero, poiché apparirà costantemente come il primo della fila. Perciò agli altri processi viene permesso l’accesso
+solo quando il primo processo torna in fase doorway e il numero che riceverà sarà 1 + max_attuale. Quindi il tempo 
+di busywaiting compiuto dai processi nella riga 7 aumenta, inoltre se il primo processo non dovesse più tornare in CS,
+vi saranno dei processi che potrebbero non mai accedere in CS. Non è perciò più garantita la No Starvation. 
+La situazione comunque non sarebbe di Deadlock, poiché non è uno stallo permamente, potendo il processo con num[i] = 1
+sbloccare tutti gli altri.
+La mutua esclusione invece è comunque garantita, poiché non è possibile che due processi possano entrare
+contemporaneamente in CS.
+
+es.
+p1 (inizialemente num[1] = 0) è il primo processo che indica che vuole entrare in CS
+
+1   	NCS
+2   	indica che sta scegliendo il numero
+3  	 num[1] = 0 + 1 = 1
+4  	 indica che ha concluso la scelta
+5-6-7-8 entra nel ciclo e nota che nessun altro sta scegliendo e tutti gli altri processi hanno num[j] = 0
+9  	 entra in CS
+10	 num[1] = 1
+
+
+p2 (num[2] = 0) indica di voler entrare dopo che p1 è uscito dalla CS
+
+1	NCS
+2	indica che sta scegliendo il numero
+3	num[2] = 1 + 1 = 2
+4	indica che ha concluso la scelta
+5	controlla gli altri processi
+6	se nessun altro sta scegliendo continua
+7	effettua busywaiting poiché num[1] = 1 AND num[1] < num[2]
+…
+Nel caso in cui p1 dovesse tornare in fase doorway si avrebbe num[1] = 2 + 1 = 3 
+E a questo punto p2 può uscire dal ciclo ed entrare in CS, ma non appena pone num[2] = 1, porta gli altri processi
+nella sua condizione precedente, cioè li obbliga ad aspettare sulla riga 7 della fase di bakery.

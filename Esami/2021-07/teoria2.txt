@@ -1,0 +1,30 @@
+L’algoritmo di Dijkstra è un meccanismo software per gestire la sincronizzazione tra più processi, è diviso in due
+fasi: la prima (3-5) si occupa della “lotta” per l’indice k, che determina quale processo andrà in critical section; 
+la seconda invece (8-9) nella versione originale garantisce la Mutua Esclusione, poiché evita che più processi che 
+sono riusciti a passare la fase 1 entrino contemporaneamente nella CS. Con la modifica apportata, si manomette questo
+meccanismo, quindi più processi riusciranno ad entrare nella sezione garantita, perciò la Mutua Esclusione non è più
+garantita
+
+es. Caso triviale: vi sono solo due processi
+p1 riesce a passare il checkpoint, quindi passed[1] = true;
+anche p2 riesce a passare il checkpoint, quindi passed[2] = true;
+
+p1
+8. controlla tutti gli altri processi (p2)
+9. passed[2] = true, quindi può proseguire
+10. entra in CS
+
+p2
+8. controlla gli altri processi (p1)
+9. passed[1] = true, può anch’esso proseguire
+10. entra in CS
+
+Vi sono quindi due processi in CS, quindi l’integrità dei dati non è garantita.
+
+Nel caso in cui invece vi sono molti processi che non hanno passato il checkpoint, il processo che vuole entrare in 
+CS sarà molto sfortunato, poiché dovrà tornare in fase 1 (goto 3) innumerevoli volte; infatti, l’unico modo per 
+entrare in CS sarà trovare un altro processo che sarà passato per il checkpoint. Pertanto non è soddisfatta la
+proprietà di No Starvation. Nonostante un processo potrebbe attendere moltissimo tempo, il Deadlock non può
+verificarsi, poiché la situazione in cui si troverebbe non è uno stallo permanente proprio per questo motivo, cioè
+appena un processo passa per la riga 7, il primo processo si può sbloccare dall’impasse temporaneo e continuare la 
+sua esecuzione.
